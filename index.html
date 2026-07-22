@@ -94,13 +94,16 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 
     <a class="chap" href="#evolve"><span class="dot" style="background:var(--evolve)"></span>2 · Evolve</a>
     <a class="sub" href="#e-parents">Parents &amp; progeny</a>
-    <a class="sub" href="#e-weight">Weight &amp; mutation</a>
+    <a class="sub" href="#e-weight">Weight · mutation · fidelity</a>
+    <a class="sub" href="#e-solo">Solo Dice 🎲</a>
 
     <a class="chap" href="#refine"><span class="dot" style="background:var(--refine)"></span>3 · Refine</a>
     <a class="sub" href="#r-strength">Polish vs change</a>
+    <a class="sub" href="#r-novelty">Novelty in Refine</a>
     <a class="sub" href="#r-rescue">Rescue feet &amp; hands</a>
 
     <a class="chap" href="#upres"><span class="dot" style="background:var(--upres)"></span>4 · Upres</a>
+    <a class="sub" href="#u-mode">Enhanced vs Magnific</a>
     <a class="sub" href="#u-size">Size &amp; Creativity</a>
 
     <a class="chap" href="#sheet"><span class="dot" style="background:var(--sheet)"></span>5 · Character Sheet</a>
@@ -110,8 +113,13 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
     <a class="chap" href="#final"><span class="dot" style="background:var(--final)"></span>6 · Final</a>
     <a class="sub" href="#f-fullrun">Full Run — one click to the end</a>
 
+    <a class="chap" href="#nightrun">🌙 Night Run</a>
+    <a class="sub" href="#n-setup">One modal, one GO</a>
+    <a class="sub" href="#n-evolve">The Evolve pass</a>
+    <a class="sub" href="#n-trust">Resume · abort · ETA</a>
+
     <a class="chap" href="#gallery">Gallery &amp; voting</a>
-    <a class="chap" href="#loras">House LoRAs</a>
+    <a class="chap" href="#loras">Config · Models &amp; LoRAs</a>
     <a class="chap" href="#recipes">Recipes &amp; tips</a>
     <a class="chap" href="#shortcuts">Buttons &amp; shortcuts</a>
   </div>
@@ -192,6 +200,8 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
   <span class="pill" style="border-color:var(--sheet);color:var(--sheet)">Use in Character Sheet →</span>
 </div>
 <p>Clicking it drops that image into the next stage's input slot and switches you there. You can also <b>drag any thumbnail</b> onto a stage's "drop a render here" panel. Stages are freely reachable from the stepper at any time.</p>
+
+<div class="tip"><b>Queue from anywhere, any time.</b> While something is rendering, GO becomes <b>+ Queue</b> — every stage can stack more work onto the backlog, from any screen, and jobs run in turn. The Monitor shows the backlog (with per-job ✕ to cancel) and a prominent <b>Est. done</b> clock projected from your real per-stage averages. Error banners now carry a dismiss ✕, and the whole rendering state survives a browser refresh.</div>
 
 <!-- ============ DISCOVER ============ -->
 <h2 id="discover"><span class="num">Stage 1</span>Discover <span class="stagechip" style="background:var(--discover)">explore</span><a class="top" href="#discover">▲ top</a></h2>
@@ -326,11 +336,16 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 <h3 id="e-parents">Parents &amp; progeny</h3>
 <p>Click <b>Choose from Output</b> under Parent A and Parent B and pick any two renders. Set <b>Progeny per Batch</b> and hit GO — the children appear as a row in the <b>Evolve Tree</b> on the right, hanging off their two parents. Use any child as a new parent to keep breeding down a promising line.</p>
 
-<h3 id="e-weight">Weight &amp; mutation</h3>
+<h3 id="e-weight">Weight · mutation · fidelity</h3>
 <ul>
   <li><b>Parent Weight</b> — full-left = 100% Parent A, full-right = 100% Parent B, centre = an even 50/50 blend of the two.</li>
-  <li><b>Mutation</b> — adds NEW wildcard elements that neither parent had, placed on the right body part (a helm on the head, boots on the feet). Higher % = more regions get an addition, and the parents grip a little looser to make room.</li>
+  <li><b>Mutation</b> — adds NEW wildcard elements that neither parent had, placed on the right body part (a helm on the head, boots on the feet). Higher % = more regions get an addition, and the parents grip a little looser to make room. Head-region mutations are automatically strength-capped so a hot roll never shatters the face.</li>
+  <li><b>Fidelity</b> — when Parent Weight is lopsided (≥&nbsp;75/25), this dial sets how literally the dominant parent's <i>signature features</i> (a glowing head, a distinctive mask) are copied onto the children. <b>~40% is the sweet spot</b> — a human wearing the signature; higher trades anatomy for carry-over.</li>
 </ul>
+<p>Evolve children land in their own <b>EVOLVE</b> gallery tab, and the parent picker only offers raw stock — Discover renders and other Evolve children — never downstream Refine/Upres products.</p>
+
+<h3 id="e-solo">Solo Dice 🎲 — variations of ONE parent</h3>
+<p>Each parent slot has a small <b>⏻</b> chip. Turn one parent OFF and the other's chip becomes a <b>🎲 dice</b> — GO now rolls <i>variations of that single parent</i>: same core character (a wizard stays a wizard holding a staff), fresh takes. Per child, the roll jitters the identity grip and release point, picks a stance, and applies Mutation as the novelty control — <b>Mutation 0 = pure re-rolls, no surprises</b>. The Parent Weight card greys out in dice mode (there's nothing to balance). Solo batches show in the tree as <span class="pill">[parent] × 🎲</span>.</p>
 
 <!-- ============ REFINE ============ -->
 <h2 id="refine"><span class="num">Stage 3</span>Refine <span class="stagechip" style="background:var(--refine)">polish</span><a class="top" href="#refine">▲ top</a></h2>
@@ -359,14 +374,22 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
   <li><b>~0.35</b> — <i>polish</i>. Sharpen detail, fix small anatomy, keep the design essentially identical.</li>
   <li><b>~0.5+</b> — <i>fix anatomy / add elements</i>. Anything typed in <b>Change / add</b> is applied with heavy weight so it definitely happens — but the image drifts more from the original.</li>
 </ul>
-<p>Leave the Change box empty for a pure clean-up pass.</p>
+<p>Leave the Change box empty for a pure clean-up pass — <b>polish mode</b> holds the design hard: the exact outfit, headwear and colors are explicitly preserved, so a turban stays a turban.</p>
+<div class="tip"><b>Headroom law.</b> Refine re-frames its input to Discover proportions before the pass — figure capped at ~84% of canvas height, feet anchored near the bottom, real headroom above (scale-down only, nothing is ever stretched). Heads never kiss the top edge again, whatever you feed it.</div>
+
+<h3 id="r-novelty">Novelty in Refine</h3>
+<p>Refine has the <b>same Novelty knobs as Discover</b> — the identical code path. At Novelty 0 nothing is injected and nothing changes that you didn't ask for; raise it and each render can roll wildcard elements on top of your Change instruction (which keeps priority). Use it to explore <i>within</i> a design you already like.</p>
 
 <h3 id="r-rescue">Rescue feet &amp; hands</h3>
 <p>With <b>Rescue feet &amp; hands</b> ON (the default), Refine runs an extra masked pass over the toes and fingers to fix the usual SDXL extremity mush. It <i>cleans</i> what's there — it won't remove an extra limb, so if a hand has six fingers, nudge Strength up instead.</p>
 
 <!-- ============ UPRES ============ -->
 <h2 id="upres"><span class="num">Stage 4</span>Upres <span class="stagechip" style="background:var(--upres)">upscale</span><a class="top" href="#upres">▲ top</a></h2>
-<p>The finishing enlarge. An <b>Enhanced</b> tiled-diffusion upscale (UltimateSDUpscale + 4x-UltraSharp) that doesn't just resize — it adds smart, on-theme detail (buckles, leather wrinkles, resolved shapes) while keeping the illustrated look.</p>
+<p>The finishing enlarge, with a <b>Mode</b> toggle:</p>
+<ul>
+  <li><b>Magnific</b> <span class="pill">default</span> — a SUPIR creative upscale that <i>reconstructs</i> materials and invents plausible micro-detail, Magnific-style. The design is locked at every creativity level — it invents texture, never a new character.</li>
+  <li><b>Enhanced</b> — the tiled-diffusion upscale (UltimateSDUpscale + 4x-UltraSharp): smart on-theme detail (buckles, leather wrinkles, resolved shapes) while keeping the illustrated look.</li>
+</ul>
 <figure>
   <div class="shot">
     <div class="frame img-upres"></div>
@@ -382,10 +405,14 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
     <li><span class="n">4</span><span class="t"><b>Use in Character Sheet →</b> <span>— promote the hero.</span></span></li>
   </ul>
 </figure>
+<h3 id="u-mode">Enhanced vs Magnific — when to use which</h3>
+<p><b>Magnific</b> is the default and the usual right answer: at <b>~10% creativity</b> it's a faithful enlargement (same design, genuinely reconstructed detail — engraving, weave, grain); at the <b>default ~70%</b> it invents rich material micro-detail while the silhouette, palette and design stay put. Each mode remembers its own creativity setting. In Magnific, 4× runs SUPIR to 2× and then the tiler doubles it gently so the invented detail is preserved, not re-imagined. Reach for <b>Enhanced</b> when you want the classic tile-diffusion look or Magnific reinterprets something you care about (exposed faces can get adventurous at high creativity).</p>
+
 <h3 id="u-size">Size &amp; Creativity</h3>
 <ul>
   <li><b>Final size</b> — <span class="pill">2×</span> for a quick high-res, <span class="pill">4×</span> for a print-scale hero. 4× is slower (more tiles).</li>
-  <li><b>Creativity</b> — low = a faithful sharpen; high = Magnific-style, reinvents detail and resolves shapes (but can drift from the original). <b>~35% is the sweet spot</b> — real added detail, still on-model.</li>
+  <li><b>Creativity (Enhanced)</b> — low = a faithful sharpen; high = reinvents detail and resolves shapes (but can drift). <b>~35% is the sweet spot</b>.</li>
+  <li><b>Creativity (Magnific)</b> — drives SUPIR's structure grip and restoration. ~10% = faithful upres · <b>~70% (default)</b> = rich invented detail · 90%+ = heavy invention, shape still held.</li>
 </ul>
 <div class="tip"><b>Steps drive time, not size.</b> A 4× upscale isn't 4× the wait — tile count and step count are what cost you. Grab a coffee for a big one and watch progress in the top bar.</div>
 
@@ -434,13 +461,36 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 </ul>
 
 <!-- ============ GALLERY ============ -->
+<h2 id="nightrun">🌙 Night Run — unattended batches<a class="top" href="#nightrun">▲ top</a></h2>
+<p>Night Run is MixForge running <i>while you sleep</i>: configure a large batch in one modal, press GO, and come back to a pipeline's worth of finished work. The <b>🌙 button</b> (top-right tools, next to Monitor) opens it.</p>
+
+<h3 id="n-setup">One modal, one GO</h3>
+<ul>
+  <li><b>Source</b> — <b>Fresh Discovery Batch</b> (N new renders using your current Subjects, Novelty, MISC — exactly like pressing GO yourself) or <b>Existing Folder</b> (a native picker; every image in the folder is snapshotted and processed).</li>
+  <li><b>Pipeline depth</b> — the dot-and-line selector sets how far every render travels: Discovery only → Refine → Upres → Character Sheet → Final. Sheet/Final need a turnaround pose map picked first, and no stage is ever skipped in the middle.</li>
+  <li><b>Run summary</b> — counts plus a projected <b>Est. finish</b> time computed from your real per-stage averages, before you commit.</li>
+</ul>
+<p>Settings are <b>snapshotted at GO</b> — change sliders afterwards freely; the running Night Run keeps the recipe it launched with.</p>
+
+<h3 id="n-evolve">The Evolve pass</h3>
+<p>Toggle on <b>auto-paired Evolve</b> and a small founder pool breeds a much wider progeny pool (10 founders can drive 100 progeny). Pairing is automatic — random pairs, never self-pairs, and a single founder switches to Solo Dice. Every child rolls a <b>fresh parent blend</b> (anywhere from 12/88 to 88/12) and mutations run <b>LARGE</b> (65–100%, rolled per pairing — the manual Evolve slider is ignored overnight). <b>Only the progeny continue downstream</b>; founders stop after breeding.</p>
+
+<h3 id="n-trust">Resume · abort · monitoring</h3>
+<ul>
+  <li><b>Crash-safe.</b> Every stage transition is journaled to <code>night-runs/&lt;run-id&gt;/</code>. If the app or PC restarts, the run <b>resumes automatically</b> — completed work is never re-rendered, shortfalls are topped up.</li>
+  <li><b>Abort.</b> Re-open the 🌙 modal while a run is active: GO becomes a red <b>ABORT Night Run</b>. It stops future dispatch, interrupts only the run's own render, and keeps everything already produced. Manual jobs in the queue are untouched.</li>
+  <li><b>Monitor.</b> The run appears in the Monitor as <span class="pill">night_run</span> jobs, the <b>Est. done — whole Night Run</b> strip projects the true finish time (founders + progeny + every remaining stage), and the main UI follows along stage-by-stage just like a Full Run.</li>
+  <li>One Night Run at a time; a failed branch never stops the others (the run ends <i>completed with errors</i> instead).</li>
+</ul>
+<div class="tip"><b>Overnight recipe.</b> 10–20 founders · Evolve ON at 60–100 progeny · depth Refine&nbsp;+&nbsp;Upres. You wake to a wide, varied pool already polished and enlarged — cull in the gallery over coffee, then Full-Run the keepers.</div>
+
 <h2 id="gallery">Gallery &amp; voting<a class="top" href="#gallery">▲ top</a></h2>
-<p>The strip along the bottom is every render you've ever made, newest first. Click any thumb to load it into the big preview; click <b>Expand ▲</b> for a full grid.</p>
+<p>The strip along the bottom is every render you've ever made, newest first. Click any thumb to load it into the big preview. The <b>▲</b> triangle expands the gallery into a full grid; the <b>▼</b> triangle hides it completely — the header row with the tabs and triangles always stays, so it's one click back.</p>
 <div class="grid2">
   <div class="card">
     <h4>Folder filters</h4>
     <p>Each render lands in the folder named for the furthest stage it reached, and the tabs filter by it:</p>
-    <p><span class="pill">Yours</span><span class="pill">All</span><span class="pill" style="border-color:var(--discover);color:var(--discover)">DISCOVERY</span><span class="pill" style="border-color:var(--refine);color:var(--refine)">REFINE</span><span class="pill" style="border-color:var(--upres);color:var(--upres)">UPSCALE</span><span class="pill" style="border-color:var(--sheet);color:var(--sheet)">SHEET</span><span class="pill" style="border-color:var(--final);color:var(--final)">FINAL</span><span class="pill">TESTS</span></p>
+    <p><span class="pill">Yours</span><span class="pill">All</span><span class="pill" style="border-color:var(--discover);color:var(--discover)">DISCOVER</span><span class="pill" style="border-color:var(--evolve);color:var(--evolve)">EVOLVE</span><span class="pill" style="border-color:var(--refine);color:var(--refine)">REFINE</span><span class="pill" style="border-color:var(--upres);color:var(--upres)">UPSCALE</span><span class="pill" style="border-color:var(--sheet);color:var(--sheet)">SHEET</span><span class="pill" style="border-color:var(--final);color:var(--final)">FINAL</span><span class="pill">TESTS</span></p>
     <p>Thumbnail borders are tinted with the same stage colours, so you can read a render's history at a glance.</p>
     <p>Hovering a thumb reveals its action chips: <b>→</b> sends it to the next stage, the red <b>»</b> fires a <a href="#f-fullrun">Full Run</a>, and <b>✕</b> deletes (to trash). Thumbs can also be <b>dragged</b> — onto a stage's input panel, or straight into Evolve's Parent A / B slots.</p>
     <p>On the short, wide Character Sheet and Final screens the gallery automatically shows <b>two rows</b> of thumbs instead of leaving the reclaimed space blank.</p>
@@ -453,8 +503,9 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 </div>
 
 <!-- ============ LORAS ============ -->
-<h2 id="loras">House LoRAs<a class="top" href="#loras">▲ top</a></h2>
-<p>The <b>⚙ Config</b> button (top-right tools) opens <b>Config · House LoRAs</b> — the SDXL LoRAs that apply to <i>every</i> render to set your house look.</p>
+<h2 id="loras">Config · Models &amp; LoRAs<a class="top" href="#loras">▲ top</a></h2>
+<p>The <b>⚙ Config</b> button (top-right tools) opens <b>Config · Base Model &amp; House LoRAs</b> — which SDXL checkpoint renders everything, and which LoRAs apply to <i>every</i> render to set your house look.</p>
+<p><b>Base Model</b> — the checkpoint every stage renders with (same setting as the top-bar Model select). Drop any full checkpoint <code>.safetensors</code> into <code>MixForge\comfyUI\</code>, hit <b>Refresh</b>, and it appears in the picker marked <i>(yours)</i>. The scanner reads each file's actual tensor header, so a LoRA mis-filed as a checkpoint gets an amber "not a base model" warning instead of a mid-render failure.</p>
 <figure>
   <div class="shot">
     <div class="frame img-config"></div>
@@ -468,7 +519,8 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
     <li><span class="n">3</span><span class="t"><b>Save</b> <span>— apply your LoRA set.</span></span></li>
   </ul>
 </figure>
-<p>Drop <code>.safetensors</code> files into the folder shown and hit <b>Refresh</b>. Trigger words are pulled from Civitai and injected into the prompt automatically (the first scan hashes each file, so it can take a moment). These LoRAs are what make an entire MixForge set feel like one artist's hand.</p>
+<p>Drop <code>.safetensors</code> files into the folder shown and hit <b>Refresh</b>. Trigger words <i>and a preview thumbnail</i> are pulled from Civitai automatically (the first scan hashes each file, so it can take a moment) — each LoRA row shows its full-height preview tile on the left, always vivid even when the LoRA is off. These LoRAs are what make an entire MixForge set feel like one artist's hand.</p>
+<div class="tip"><b>Everything auto-saves.</b> Every toggle, weight and CFG change in this panel persists on its own a half-second after you touch it — no Save click needed, and a browser refresh always comes back exactly as you left it. A locked or mid-copy file in the folder is skipped harmlessly, so you can drop files in while renders are running.</div>
 
 <!-- ============ RECIPES ============ -->
 <h2 id="recipes">Recipes &amp; tips<a class="top" href="#recipes">▲ top</a></h2>
