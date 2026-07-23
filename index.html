@@ -88,6 +88,7 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
     <a class="chap" href="#discover"><span class="dot" style="background:var(--discover)"></span>1 · Discover</a>
     <a class="sub" href="#d-subjects">Subjects &amp; weights</a>
     <a class="sub" href="#d-novelty">Novelty &amp; Strength</a>
+    <a class="sub" href="#d-pinned">Pinned anchors</a>
     <a class="sub" href="#d-inject">Novelty vs MISC &amp; body regions</a>
     <a class="sub" href="#d-style-pose">Style &amp; Pose</a>
     <a class="sub" href="#d-batch">Aspect · Draft · Batch</a>
@@ -160,9 +161,10 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 <h3 id="prompt">Core vs Project prompt</h3>
 <p>The prompt bar has two tabs:</p>
 <ul>
-  <li><b>Project</b> — <i>what you're designing right now</i> ("a barbarian warlord holding a harpoon, glowing purple eyes"). Change this constantly.</li>
+  <li><b>Project</b> — <i>what you're designing right now</i> ("a modern post-apocalyptic survivor"). Change this constantly.</li>
   <li><b>Core</b> — your <i>house style</i>: the long, mostly-fixed block (medium, lighting, quality words, standing art rules) that rides on <b>every</b> render so your whole set looks like one artist made it.</li>
 </ul>
+<div class="warn"><b>Keep the Project prompt SHORT.</b> Concrete nouns in the prompt beat everything else — a clause like "man in dragon armor holding a harpoon, purple eyes and spear energy" stamps dragon armor, a polearm and a purple wash onto <i>every</i> render, no matter what your references say (that one line once made an entire 50-founder Night Run identical). Describe only the concept; let references, wildcards and MISC define the costume. Always-on signatures like purple eyes belong in <b>Pinned anchors</b> (<a class="inline" href="#d-pinned">see Discover</a>), where they're masked to their body region and can't tint the rest of the design.</div>
 <div class="warn"><b>Style words are a nudge, not a lock.</b> A phrase like "in the style of &lt;artist&gt;" biases the model but will <i>not</i> reliably suppress unwanted content (e.g. modern clothing) on its own. If something keeps sneaking in, the reliable levers are: put the opposite in the <b>negative prompt</b>, lower the offending <b>reference's weight</b>, or add an explicit positive ("heavy plate armor, leather"). See <a class="inline" href="#recipes">Recipes</a>.</div>
 
 <!-- ============ INTERFACE TOUR ============ -->
@@ -227,9 +229,18 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 <h3 id="d-subjects">Subjects &amp; weights</h3>
 <p>Each <b>Subject bucket</b> (A, B, C…) holds one or more reference images that share a role. MixForge feeds them through IPAdapter, so they contribute <b>style, palette and silhouette</b> — not literal copying. The <b>Weight</b> slider sets how loud that bucket is in the mix; <b>Range ±</b> jitters the weight a little per render so a batch explores around your setting instead of repeating.</p>
 <div class="tip"><b>Rule of thumb.</b> References drive the <i>look</i>; the prompt drives the <i>idea</i>. If a reference's outfit is bleeding through too strongly, lower its Weight rather than fighting it in text.</div>
+<p><b>Weights auto-normalize.</b> Under the hood, every render's rolled Subject weights are scaled so they <b>total exactly 1.0</b> — your sliders set <i>ratios</i>, not absolute strength. This keeps references firmly in charge: totals below ~1 used to hand the design to the checkpoint's own taste (everything drifted fantasy no matter what your refs said). A bucket whose roll lands on 0 still sits that render out — that's Range doing its job — and the buckets that did participate split the full 1.0 between them. A solo bucket rides at 1.0.</p>
+<div class="warn"><b>The bucket is now the quality gate.</b> Because each render draws <b>one</b> image from each bucket and follows it strongly, every weak image in a folder is a guaranteed weak render — a product photo gives you product-shot proportions, a monochrome sheet gives you a monochrome character, a female-form ref gives you a female form. Curate hard: every image in an enabled bucket should be one you'd be happy to see steer a render on its own.</div>
 
 <h3 id="d-novelty">Novelty &amp; Strength</h3>
-<p><b>Novelty</b> adds unexpected on-theme elements that aren't in any reference — the same <i>amount</i> every render, but different surprises each time, so results stay on-model while still varying. <b>Strength</b> controls how hard each wildcard is pushed (SDXL <code>(term:weight)</code> emphasis). Below ~1.2 the extras tend to vanish under the house-style block; the default sits high on purpose. <b>Edit wildcard list…</b> opens the word library those surprises are drawn from.</p>
+<p><b>Novelty</b> adds unexpected on-theme elements that aren't in any reference — the same <i>amount</i> every render, but different surprises each time, so results stay on-model while still varying. <b>Every rolled term now lands as a masked conditioning branch</b> aimed at its body region: a helmet term conditions only the head zone, boots only the feet, and terms from the shared pool cover the whole figure. Nothing rides quietly in the prompt tail anymore — if a term rolled, it's being painted. The ⓘ recipe shows each term with a chip naming where it went (<b>→ head</b>, <b>→ torso</b>, <b>→ figure</b>…). <b>Edit wildcard list…</b> opens the word libraries the surprises are drawn from.</p>
+
+<h3 id="d-pinned">Pinned anchors — always-on signatures</h3>
+<p>Some design elements aren't surprises — they're <b>by design, on every render</b>. Pinned anchors live in <code>prompts/novelty/pinned.txt</code>, one per line as <code>region: term</code>:</p>
+<pre><code>head: glowing purple eyes
+torso: a scorched clan sigil on the chest</code></pre>
+<p>Each line becomes a masked branch on <b>every</b> Discover, Refine and Evolve render — always present, but physically unable to leak outside its region. Valid regions: <code>head</code>, <code>torso</code>, <code>shoulders</code>, <code>hands</code>, <code>feet</code>, <code>figure</code> (whole body). The file is read fresh each render, so edits apply immediately — no restart. Every render's ⓘ recipe lists its anchors with a <b>PINNED → region</b> chip.</p>
+<div class="tip"><b>Why not just put it in the prompt?</b> A prompt is one signal covering the whole canvas — "glowing purple eyes" in the Project prompt tints armor, weapons and energy effects purple, because the model hears "purple" while painting <i>everything</i>. Masked to the head box, the color can't reach the torso. If a signature keeps bleeding, it belongs here, not in the prompt.</div>
 
 
 <h3 id="d-inject">Injecting the unexpected — Novelty vs MISC, and the body-region map</h3>
@@ -279,10 +290,10 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 <div class="grid2">
   <div class="card">
     <h4>Novelty — injecting with WORDS</h4>
-    <p>Draws surprise <b>terms</b> from the word libraries in <code>prompts/novelty/&lt;region&gt;/</code> (headwear.txt, gloves.txt, footware.txt…) and weaves them into the prompt with heavy emphasis <code>(term:1.4)</code>.</p>
+    <p>Draws surprise <b>terms</b> from the word libraries in <code>prompts/novelty/&lt;region&gt;/</code> (headwear.txt, gloves.txt, footware.txt…) plus the shared pool <code>global.txt</code> — and conditions <b>every</b> term onto the canvas through its body-region mask (pool terms use a whole-figure mask, merged into one branch so they can't spawn a second character).</p>
     <ul>
-      <li><b>Novelty amount</b> — how many body slots get a surprise per render.</li>
-      <li><b>Strength</b> — the SDXL emphasis on each term (below ~1.2 they vanish under the house style).</li>
+      <li><b>Novelty amount</b> — how many surprises per render.</li>
+      <li><b>Masked landing</b> — a rolled term is painted, not whispered; the ⓘ recipe's region chips are the receipt.</li>
       <li>Cheap, endless variety; the model <i>imagines</i> the item, so styles blend naturally.</li>
     </ul>
   </div>
@@ -290,7 +301,8 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
     <h4>MISC — injecting with IMAGES</h4>
     <p>Pulls one random <b>reference photo</b> from each category folder in <code>misc/</code> (helmets, boots, materials…) and applies it as an attention-masked IPAdapter branch <b>only inside that body region</b>. Materials apply as a light whole-figure surface style.</p>
     <ul>
-      <li><b>Strength ~0.8</b> — below that, picks don't visibly land.</li>
+      <li><b>Per-category Chance</b> — each category rolls its own participation per render (default 30%); on a hit, ONE random pick lands on its region. 30% ≈ a render wears 1–2 accessories, not the whole shop. The always-on 5-category stack was the old conformity engine.</li>
+      <li><b>Strength ~0.8</b> — below that, picks don't visibly land. The shared Strength bar sits at the top of the card.</li>
       <li>Keep <i>character</i> images out of <code>misc/random/</code> — accessories and textures only.</li>
       <li><b>Anatomy safety:</b> leg/feet/hand branches run at reduced weight and release at 50% of sampling — they <i>skin</i> the limb the skeleton drew, they never draw a limb of their own (the 3-leg fix).</li>
     </ul>
@@ -473,7 +485,8 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 <p>Settings are <b>snapshotted at GO</b> — change sliders afterwards freely; the running Night Run keeps the recipe it launched with.</p>
 
 <h3 id="n-evolve">The Evolve pass</h3>
-<p>Toggle on <b>auto-paired Evolve</b> and a small founder pool breeds a much wider progeny pool (10 founders can drive 100 progeny). Pairing is automatic — random pairs, never self-pairs, and a single founder switches to Solo Dice. Every child rolls a <b>fresh parent blend</b> (anywhere from 12/88 to 88/12) and mutations run <b>LARGE</b> (65–100%, rolled per pairing — the manual Evolve slider is ignored overnight). <b>Only the progeny continue downstream</b>; founders stop after breeding.</p>
+<p>Toggle on <b>auto-paired Evolve</b> and a small founder pool breeds a much wider progeny pool (10 founders can drive 100 progeny). Pairing is automatic and <b>diversity-seeking</b>: for each group, parent A is drawn at random and parent B is the <i>most different</i> founder the picker can find — a completely different drawn source reference counts most, lowest wildcard overlap breaks ties. Never self-pairs; a single founder switches to Solo Dice. Every child rolls a <b>fresh parent blend</b> (anywhere from 12/88 to 88/12) and mutations run <b>LARGE</b> (65–100%, rolled per pairing — the manual Evolve slider is ignored overnight). <b>Only the progeny continue downstream</b>; founders stop after breeding.</p>
+<div class="tip"><b>Diversity in = diversity out.</b> Blending two near-identical parents produces the same child at <i>any</i> blend ratio, and mutation can only decorate on top. If a whole run comes out samey, the usual culprit isn't Evolve — it's a homogeneous founder pool, most often caused by an over-specific Project prompt stamping every founder with the same costume.</div>
 
 <h3 id="n-trust">Resume · abort · monitoring</h3>
 <ul>
@@ -521,6 +534,7 @@ figcaption{color:var(--mut);font-size:12.5px;margin-top:8px}
 </figure>
 <p>Drop <code>.safetensors</code> files into the folder shown and hit <b>Refresh</b>. Trigger words <i>and a preview thumbnail</i> are pulled from Civitai automatically (the first scan hashes each file, so it can take a moment) — each LoRA row shows its full-height preview tile on the left, always vivid even when the LoRA is off. These LoRAs are what make an entire MixForge set feel like one artist's hand.</p>
 <div class="tip"><b>Everything auto-saves.</b> Every toggle, weight and CFG change in this panel persists on its own a half-second after you touch it — no Save click needed, and a browser refresh always comes back exactly as you left it. A locked or mid-copy file in the folder is skipped harmlessly, so you can drop files in while renders are running.</div>
+<p><b>Style without the content drag.</b> A LoRA pushes through two channels: the <b>UNet</b> half carries the <i>rendering</i> (ink density, linework, shading) and the <b>CLIP</b> half carries the <i>vocabulary</i> — the concept associations that quietly pull every design toward the LoRA's training subject ("graphic novel character" → fantasy hero). MixForge now runs House LoRAs with <b>UNet at your full slider weight but CLIP at 35%</b> of it, so you can run a style LoRA hot (≈0.9–1.0) for a rock-steady house look without it normalizing your designs. If every render still drifts toward one archetype at a high weight, the LoRA's vocabulary is winning anyway — lower its weight before blaming your references.</p>
 
 <!-- ============ RECIPES ============ -->
 <h2 id="recipes">Recipes &amp; tips<a class="top" href="#recipes">▲ top</a></h2>
