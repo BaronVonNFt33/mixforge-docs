@@ -516,8 +516,17 @@ torso: a scorched clan sigil on the chest</code></pre>
 </div>
 
 <!-- ============ LORAS ============ -->
-<h2 id="loras">Config · Models &amp; LoRAs<a class="top" href="#loras">▲ top</a></h2>
-<p>The <b>⚙ Config</b> button (top-right tools) opens <b>Config · Base Model &amp; House LoRAs</b> — which SDXL checkpoint renders everything, and which LoRAs apply to <i>every</i> render to set your house look.</p>
+<h2 id="loras">Options · Models &amp; LoRAs<a class="top" href="#loras">▲ top</a></h2>
+<p>The <b>⚙</b> button (top-right tools) opens <b>Options</b> — a category sidebar with <b>Main Model</b> (checkpoint + Baseline CFG) and <b>LoRAs</b>. The panel remembers where you were — category, tab and scroll — across close/reopen.</p>
+<h3>Three KINDS of LoRA — folder = kind</h3>
+<p>LoRAs live in three folders (<code>LoRA\style</code>, <code>LoRA\subject</code>, <code>LoRA\detail</code>) shown as three tabs, because the three kinds do different jobs and apply at different stages:</p>
+<ul>
+  <li><b>Style</b> — the house look (ink, anime, realism). Applies to <b>every stage</b>. Runs its vocabulary (CLIP) at 35% of the weight so a hot style can't drag designs toward its training subject.</li>
+  <li><b>Subject</b> — design DNA (wires, biotech, fractals, robot parts, geometric couture). Applies in <b>Discover and Evolve</b> at full CLIP — the vocabulary IS the point — and Refine automatically re-applies the source render's subject set at half weight so the DNA survives polishing. Each row has a <b>Chance</b> slider: it <i>auto-shares</i> across enabled subject LoRAs (one at 100% always fires; two at 100% fire ~50% each) so stacked LoRAs deal different DNA to different renders instead of all fighting on every one.</li>
+  <li><b>Detail</b> — micro-texture enhancers. Apply only in <b>Upres · Sheet · Final</b>, UNet-only (CLIP 0), so they enrich finished pixels without re-interpreting the prompt.</li>
+</ul>
+<p>Every render's ⓘ recipe has a <b>LoRAs fired</b> list showing exactly which LoRAs (with kind, weight and CLIP) touched that image — the reproducibility receipt now that LoRA sets vary per stage and per render. Each row also has a <code>CLIP: auto</code> button to pin a custom CLIP strength when a specific LoRA needs to deviate from its kind's doctrine.</p>
+<div class="tip"><b>Pure prompt mode.</b> A Discover batch with <i>no</i> Subject buckets is allowed — the render is driven by prompt + LoRAs alone. That's the exploration lane for harvesting a subject LoRA's native look (big silhouette-breaking shapes that references would otherwise tame) — keep the best and drop them into a bucket as new reference DNA.</div>
 <p><b>Base Model</b> — the checkpoint every stage renders with (same setting as the top-bar Model select). Drop any full checkpoint <code>.safetensors</code> into <code>MixForge\comfyUI\</code>, hit <b>Refresh</b>, and it appears in the picker marked <i>(yours)</i>. The scanner reads each file's actual tensor header, so a LoRA mis-filed as a checkpoint gets an amber "not a base model" warning instead of a mid-render failure.</p>
 <figure>
   <div class="shot">
