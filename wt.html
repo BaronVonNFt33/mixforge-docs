@@ -41,6 +41,29 @@ above 0.70, so mixes are untouched. <b>Confidence:</b> direction solid, exact th
 
 <h2>Contact sheet</h2>
 <img src="wt/sheet.png">
+
+<h2>Second fix &mdash; &ldquo;the C is cropped&rdquo;</h2>
+<p>It was never cropped: the figure touched no frame edge and the vertical framing was identical
+on every step (height 86%, top gap 8%, bottom gap 6%). What differed was <b>width</b> &mdash;
+the mech spread 79% of the frame against its neighbours' 60&ndash;62%, which on a sheet where the
+steps sit side by side reads as zoomed in.</p>
+<p>The first attempt at a width ceiling <b>shipped broken and was pulled the same day</b>. It
+measured width with a colour threshold against the corner pixels, which works on a flat plate and
+fails on a gradient one &mdash; the backdrop clears the threshold and the mask spans the frame.
+Over 12 renders it called 9 of them wider than 90%, including one whose figure occupies 53%. So it
+demanded a huge shrink and pasted the render inside a grey border, worse than the problem. Now
+measured with the u2net matte instead, and floored so the width term can never demand that shrink
+again.</p>
+<table>
+<tr><th>BlendRun step</th><th>width BEFORE</th><th>width AFTER</th><th>factor</th></tr>
+<tr><td>1 &mdash; samurai</td><td>52.7%</td><td class="k">52.7% (untouched)</td><td>1.000</td></tr>
+<tr><td>2 &mdash; samurai</td><td>56.1%</td><td class="k">56.1% (untouched)</td><td>1.000</td></tr>
+<tr><td>3 &mdash; mech</td><td class="b">78.3%</td><td class="k">66.0%</td><td>0.842</td></tr>
+</table>
+<p><b>Width spread across the ladder: 25.5% &rarr; 13.3%.</b> That spread is literally what
+&ldquo;the C is cropped&rdquo; was.</p>
+<img src="wt/widthlock.png">
+
 <h2>Full size, in ladder order</h2>
 
   <figure>
