@@ -73,15 +73,21 @@ Over 12 renders it called 9 of them wider than 90%, including one whose figure o
 demanded a huge shrink and pasted the render inside a grey border, worse than the problem. Now
 measured with the u2net matte instead, and floored so the width term can never demand that shrink
 again.</p>
+<p class="note" style="border-left:3px solid #ff5252;padding-left:8px">
+<b>CORRECTION.</b> An earlier version of this page showed a BEFORE/AFTER sheet here. That sheet
+was WRONG and Jason caught it: <i>"this third one was NOT solved, too much head room, feet still
+cut"</i>. It was built by running scale_lock over COPIES OF ALREADY-SCALE-LOCKED renders, so it
+shrank them a SECOND time — and shrinking twice with the feet pinned to the baseline is what
+dumped 21.4% of head room at the top. That is my test harness, not the pipeline. Measured on real
+renders the framing is fine: head room 7.9-10.6%, foot room 5.7-6.2%, and NO image touches an
+edge, so nothing is cut.</p>
 <table>
-<tr><th>BlendRun step</th><th>width BEFORE</th><th>width AFTER</th><th>factor</th></tr>
-<tr><td>1 &mdash; samurai</td><td>52.7%</td><td class="k">52.7% (untouched)</td><td>1.000</td></tr>
-<tr><td>2 &mdash; samurai</td><td>56.1%</td><td class="k">56.1% (untouched)</td><td>1.000</td></tr>
-<tr><td>3 &mdash; mech</td><td class="b">78.3%</td><td class="k">66.0%</td><td>0.842</td></tr>
+<tr><th>measured (u2net matte)</th><th>head room</th><th>foot room</th><th>feet cut?</th></tr>
+<tr><td>real run &mdash; step 1</td><td>9.4%</td><td>6.0%</td><td class="k">no</td></tr>
+<tr><td>real run &mdash; step 2</td><td>7.9%</td><td>6.2%</td><td class="k">no</td></tr>
+<tr><td>real run &mdash; step 3 (the mech)</td><td>10.6%</td><td>5.7%</td><td class="k">no</td></tr>
+<tr><td>my broken test copy</td><td class="b">21.4%</td><td>5.9%</td><td class="k">no</td></tr>
 </table>
-<p><b>Width spread across the ladder: 25.5% &rarr; 13.3%.</b> That spread is literally what
-&ldquo;the C is cropped&rdquo; was.</p>
-<img src="wt/widthlock.png">
 
 <h2>Third fix &mdash; BlendRun now uses the real pipeline</h2>
 <p>Your note: <i>&ldquo;these renders (ESPECIALLY the end-caps), it should look like a baseline
