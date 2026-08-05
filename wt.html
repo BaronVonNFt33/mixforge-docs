@@ -25,7 +25,7 @@ humanoid reference disappears. Those imply opposite repairs, so this isolates th
 <table>
 <tr><th>weight</th><th>seed 90210</th><th>seed 4242</th><th>design</th></tr>
 <tr><td>1.00</td><td class="b">extra arms + 2nd body</td><td class="b">extra arms + 2nd body</td><td>intact</td></tr>
-<tr><td>0.85</td><td class="k">clean</td><td class="b">extra arms + 2nd body</td><td>intact</td></tr>
+<tr><td>0.85</td><td class="b">extra arms (Jason)</td><td class="b">extra arms + 2nd body</td><td>intact</td></tr>
 <tr><td>0.70</td><td class="k">clean</td><td class="k">clean</td><td class="k">still that mech</td></tr>
 <tr><td>0.55</td><td class="k">clean</td><td class="k">clean</td><td class="m">drifted</td></tr>
 </table>
@@ -41,6 +41,25 @@ above 0.70, so mixes are untouched. <b>Confidence:</b> direction solid, exact th
 
 <h2>Contact sheet</h2>
 <img src="wt/sheet.png">
+
+<h2>Test WT2 &mdash; NEEDS YOU. Is 0.70 actually safe?</h2>
+<p>You corrected WT: the 0.85 cells I called MIXED are <b>both BAD</b>. That makes the ladder a
+cliff, not a slope &mdash; 0.85 fails 2/2, 0.70 passes 2/2 &mdash; which is good news for picking
+0.70 and bad news for the confidence behind it. <b>Two seeds cannot tell &ldquo;clean&rdquo; from
+&ldquo;fails 1 in 5&rdquo;</b>, and you have called this defect unacceptable rather than
+undesirable.</p>
+<p>So: <b>6 fresh seeds at 0.70</b> (the shipped ceiling) and <b>6 at 0.60</b> (the fallback,
+rendered now so a bad result doesn't cost another round-trip). Subject_C alone, nothing else
+moving. All 12 weights verified distinct in the sidecars.</p>
+<p><b>What I see</b> &mdash; and my eyeball is not the gate, which is the whole lesson of WT:
+all 12 look two-armed to me, and at <b>0.60 more human faces come through</b> (seeds 31337,
+60606, 12345), which is design transfer weakening. That argues for keeping 0.70 if it grades
+clean.</p>
+<p><b>The rule, committed before the renders:</b> 0.70 clean 6/6 &rarr; ceiling stays at 0.70.
+Any defect at 0.70 &rarr; it ships too high, drop to 0.60 and the design cost goes up. Both arms
+defective &rarr; weight alone cannot close this and the next lever is anatomy, not a lower
+number.</p>
+<img src="wt/wt2.png">
 
 <h2>Second fix &mdash; &ldquo;the C is cropped&rdquo;</h2>
 <p>It was never cropped: the figure touched no frame edge and the vertical framing was identical
@@ -64,6 +83,26 @@ again.</p>
 &ldquo;the C is cropped&rdquo; was.</p>
 <img src="wt/widthlock.png">
 
+<h2>Third fix &mdash; BlendRun now uses the real pipeline</h2>
+<p>Your note: <i>&ldquo;these renders (ESPECIALLY the end-caps), it should look like a baseline
+render (single Subject at START/END) and use all the same pipelines, not some special hack&rdquo;</i>
+&mdash; correct, and here is exactly where. BlendRun did POST to the normal
+<code>/api/discovery/run</code>, but it <b>hand-built the request body</b> instead of sending what
+GO sends. Forced or missing: size hardcoded 768&times;1344 (ignoring your aspect), novelty forced
+to 0, Misc forced off, and no style, no held prop, and <b>no per-Subject label</b> &mdash; so an
+end-cap rendered an unnamed subject with no gear and no wildcards. It could not look like a
+baseline render because it wasn't one.</p>
+<p>It now reads all of that from the saved project, the same source GO uses. <b>Turning novelty
+and Misc back on does not uncontrol the ladder</b>, which is why this is safe rather than a
+trade-off: novelty rolls from <code>Random(seed ^ 0xA11CE)</code> and Misc from
+<code>Random(seed)</code>, and a BlendRun holds ONE seed for every step &mdash; so every rung
+draws the same wildcards and the same gear, and the blend stays the only thing moving.</p>
+<p>Verified on a live 3-step run. The label now tracks the blend exactly: step 1 carries
+<code>samurai</code> only, step 2 carries <code>samurai</code> <i>and</i> <code>cyborg</code>,
+step 3 carries <code>cyborg</code> only. And the end-caps resolve to weight <b>0.7, not 1.0</b>
+&mdash; so BlendRun inherited the extra-arms fix automatically. No extra arms at 100% C.</p>
+<img src="wt/blendrun.png">
+
 <h2>Full size, in ladder order</h2>
 
   <figure>
@@ -80,14 +119,14 @@ again.</p>
   </figure>
   <figure>
     <figcaption><b>weight 0.85</b> &middot; seed 90210
-      <span style="color:#ffb300;font-weight:700">MIXED</span>
-      <span class="note">seed 4242 defective, seed 90210 clean</span></figcaption>
+      <span style="color:#ff5252;font-weight:700">BAD</span>
+      <span class="note">Jason graded BOTH seeds bad — second set of arms</span></figcaption>
     <img src="wt/wt_085_s0.png" loading="lazy">
   </figure>
   <figure>
     <figcaption><b>weight 0.85</b> &middot; seed 4242
-      <span style="color:#ffb300;font-weight:700">MIXED</span>
-      <span class="note">seed 4242 defective, seed 90210 clean</span></figcaption>
+      <span style="color:#ff5252;font-weight:700">BAD</span>
+      <span class="note">Jason graded BOTH seeds bad — second set of arms</span></figcaption>
     <img src="wt/wt_085_s1.png" loading="lazy">
   </figure>
   <figure>
