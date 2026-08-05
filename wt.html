@@ -1,0 +1,93 @@
+<!doctype html><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test WT — reference weight vs extra arms</title>
+<style>
+ body{background:#111;color:#eee;font:15px/1.5 system-ui,sans-serif;margin:0;padding:16px;max-width:1100px}
+ h1{font-size:20px;margin:0 0 4px} h2{font-size:16px;margin:28px 0 8px;color:#8ecfff}
+ p{color:#bbb;max-width:70ch} img{width:100%;height:auto;border-radius:6px;display:block}
+ figure{margin:0 0 26px} figcaption{margin-bottom:6px;font-size:14px}
+ .note{color:#999;font-size:13px}
+ table{border-collapse:collapse;margin:10px 0;font-size:14px}
+ td,th{border:1px solid #333;padding:5px 10px;text-align:left}
+ .k{color:#4caf50} .b{color:#ff5252} .m{color:#ffb300}
+</style>
+<h1>Test WT — is it the reference WEIGHT?</h1>
+<p>Subject_C alone. No second bucket, no MISC, no novelty. Same pinned mech reference, same pose,
+same cap (0.55), same checkpoint. <b>The only thing moving is the reference weight.</b></p>
+
+<h2>Why this test existed</h2>
+<p>Test ARM ruled out <code>pose_content_cap</code>: 4 values &times; 2 shares &times; 2 seeds, and
+C&nbsp;100% was defective 8/8 at <i>every</i> cap while C&nbsp;50% was clean 8/8 at every cap. But
+share moves two things at once &mdash; the weight goes 0.5&nbsp;&rarr;&nbsp;1.0 <i>and</i> the
+humanoid reference disappears. Those imply opposite repairs, so this isolates the weight.</p>
+
+<h2>Result</h2>
+<table>
+<tr><th>weight</th><th>seed 90210</th><th>seed 4242</th><th>design</th></tr>
+<tr><td>1.00</td><td class="b">extra arms + 2nd body</td><td class="b">extra arms + 2nd body</td><td>intact</td></tr>
+<tr><td>0.85</td><td class="k">clean</td><td class="b">extra arms + 2nd body</td><td>intact</td></tr>
+<tr><td>0.70</td><td class="k">clean</td><td class="k">clean</td><td class="k">still that mech</td></tr>
+<tr><td>0.55</td><td class="k">clean</td><td class="k">clean</td><td class="m">drifted</td></tr>
+</table>
+<p>Pooled with ARM, which contributes 8 more cells at each end:
+<b>10/10 defective at weight 1.00, 8/8 clean at the 0.50 each branch carries in a 50/50.</b>
+That is a dose&ndash;response, so weight is the mechanism &mdash; and it explains why you see this
+constantly at a BlendRun endpoint and rarely in normal use: the endpoints are the only place a
+single reference routinely resolves to 1.000.</p>
+<p><b>Shipped:</b> a ceiling at <b>0.70</b> &mdash; the highest clean rung, because resemblance is
+monotonic in strength and every point below that is design transfer thrown away. It only binds
+above 0.70, so mixes are untouched. <b>Confidence:</b> direction solid, exact threshold between
+0.70 and 0.85 is not &mdash; n=2 per rung, one subject, one checkpoint.</p>
+
+<h2>Contact sheet</h2>
+<img src="wt/sheet.png">
+<h2>Full size, in ladder order</h2>
+
+  <figure>
+    <figcaption><b>weight 1.00</b> &middot; seed 90210
+      <span style="color:#ff5252;font-weight:700">BAD</span>
+      <span class="note">extra arms + second body</span></figcaption>
+    <img src="wt/wt_100_s0.png" loading="lazy">
+  </figure>
+  <figure>
+    <figcaption><b>weight 1.00</b> &middot; seed 4242
+      <span style="color:#ff5252;font-weight:700">BAD</span>
+      <span class="note">extra arms + second body</span></figcaption>
+    <img src="wt/wt_100_s1.png" loading="lazy">
+  </figure>
+  <figure>
+    <figcaption><b>weight 0.85</b> &middot; seed 90210
+      <span style="color:#ffb300;font-weight:700">MIXED</span>
+      <span class="note">seed 4242 defective, seed 90210 clean</span></figcaption>
+    <img src="wt/wt_085_s0.png" loading="lazy">
+  </figure>
+  <figure>
+    <figcaption><b>weight 0.85</b> &middot; seed 4242
+      <span style="color:#ffb300;font-weight:700">MIXED</span>
+      <span class="note">seed 4242 defective, seed 90210 clean</span></figcaption>
+    <img src="wt/wt_085_s1.png" loading="lazy">
+  </figure>
+  <figure>
+    <figcaption><b>weight 0.70</b> &middot; seed 90210
+      <span style="color:#4caf50;font-weight:700">CLEAN</span>
+      <span class="note">two arms, cannons intact, still that mech</span></figcaption>
+    <img src="wt/wt_070_s0.png" loading="lazy">
+  </figure>
+  <figure>
+    <figcaption><b>weight 0.70</b> &middot; seed 4242
+      <span style="color:#4caf50;font-weight:700">CLEAN</span>
+      <span class="note">two arms, cannons intact, still that mech</span></figcaption>
+    <img src="wt/wt_070_s1.png" loading="lazy">
+  </figure>
+  <figure>
+    <figcaption><b>weight 0.55</b> &middot; seed 90210
+      <span style="color:#4caf50;font-weight:700">CLEAN</span>
+      <span class="note">two arms, but the design has drifted</span></figcaption>
+    <img src="wt/wt_055_s0.png" loading="lazy">
+  </figure>
+  <figure>
+    <figcaption><b>weight 0.55</b> &middot; seed 4242
+      <span style="color:#4caf50;font-weight:700">CLEAN</span>
+      <span class="note">two arms, but the design has drifted</span></figcaption>
+    <img src="wt/wt_055_s1.png" loading="lazy">
+  </figure>
