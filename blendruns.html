@@ -1,0 +1,47 @@
+<!doctype html><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BlendRuns — 3 / 5 / 8 steps</title>
+<style>
+ body{background:#111;color:#eee;font:15px/1.5 system-ui,sans-serif;margin:0;padding:16px;max-width:1400px}
+ h1{font-size:20px;margin:0 0 4px} h2{font-size:16px;margin:28px 0 6px;color:#8ecfff}
+ p{color:#bbb;max-width:78ch} img{width:100%;height:auto;border-radius:6px;display:block}
+ .note{color:#999;font-size:13px;margin:0 0 8px}
+ table{border-collapse:collapse;margin:10px 0;font-size:14px}
+ td,th{border:1px solid #333;padding:4px 9px;text-align:left}
+ .k{color:#4caf50} .b{color:#ff5252} .m{color:#ffb300}
+ code{background:#222;padding:1px 4px;border-radius:3px}
+</style>
+<h1>BlendRuns — 3 / 5 / 8 steps, one seed each</h1>
+<p>Subject_B &rarr; Subject_C (samurai &rarr; cyborg) deliberately: this is the pairing that
+produced the extra arms, so a regression would show rather than hide. Each run holds ONE seed
+across its steps; references are pinned per run and drawn from the seed, so every run picks its
+own.</p>
+
+<h2>Regression checks — all pass</h2>
+<table>
+<tr><th>check</th><th>result</th></tr>
+<tr><td>No bucket above the 0.70 ceiling</td><td class="k">PASS — 16/16 renders</td></tr>
+<tr><td>End-caps resolve to 0.7, not 1.000</td><td class="k">PASS — all 6 endpoints</td></tr>
+<tr><td>Per-Subject label tracks the blend</td><td class="k">PASS — <code>samurai</code> alone at the start,
+    both in the middle, <code>cyborg</code> alone at the end</td></tr>
+<tr><td>Framing (scale_lock applied)</td><td class="k">PASS — factor 0.82–0.91, no render skipped</td></tr>
+</table>
+
+<h2 style="color:#ffb300">Known issue this run exposed — the ladder is compressed at the top</h2>
+<p>The weight ceiling is applied as a <b>per-bucket clamp</b>, so every value above 0.70 collapses
+onto 0.70. In the 8-step run <code>Subject_B</code> reads <b>0.7 at rungs 1, 2 and 3</b> — 1.000,
+0.857 and 0.714 all land on the same number. The intended 86/14 ratio of 6:1 renders as 4.9:1.</p>
+<p>That is a side effect of the extra-arms fix and it works directly against a clean gradient.
+The repair is to <b>scale the whole set</b> so the strongest reference sits at 0.70 and the
+RATIO between them is preserved, instead of clamping each one independently. The anatomy
+protection is identical either way — the strongest bucket is still capped at 0.70.</p>
+
+<h2>3 steps &mdash; seed 20260804</h2>
+<p class="note">pinned references &mdash; B: il_1588xN.7633026715_pp5d.jpg · C: 6d80a9d3c04f0227f9a66407e7e69ea2.jpg</p>
+<img src="br/sheet_3.png" loading="lazy">
+<h2>5 steps &mdash; seed 777333</h2>
+<p class="note">pinned references &mdash; B: ss.jpg · C: 6d80a9d3c04f0227f9a66407e7e69ea2.jpg</p>
+<img src="br/sheet_5.png" loading="lazy">
+<h2>8 steps &mdash; seed 424242</h2>
+<p class="note">pinned references &mdash; B: sw2323.jpg · C: fd4ae844b2eaf72150596ae303d169b6.jpg</p>
+<img src="br/sheet_8.png" loading="lazy">
